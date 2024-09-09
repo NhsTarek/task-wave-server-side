@@ -50,6 +50,18 @@ async function run() {
 
 
 
+  // Get all tasks for taskCreator
+  app.get('/my-tasks/:email', async (req, res) =>{
+    const email = req.params.email;
+    let query = {'taskCreator.creator_email': email}
+    const result = await tasksCollection.find(query).toArray()
+    res.send(result)
+   })
+
+
+
+
+
   //  get a single task from db
 
   app.get('/task/:id', async (req, res) =>{
