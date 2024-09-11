@@ -27,8 +27,31 @@ async function run() {
   try {
 
     const tasksCollection = client.db('taskWaveDB').collection('tasks')
+    const usersCollection = client.db('taskWaveDB').collection('users')
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+
+
+
+
+  //  Save a user data in db
+
+  app.put('/user', async (req, res) =>{
+    const user = req.body;
+
+    const options = { upsert: true};
+    const query = {email: user?.email};
+    const updateDoc = {
+      $set : {
+        ...user,
+        timestamp : Date.now(),
+      },
+    }
+    const result = await usersCollection.updateOne(query, updateDoc, options);
+    res.send(result);
+  })
+
 
 
 
