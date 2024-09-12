@@ -6,6 +6,17 @@
 
 
 // middlewares
+
+// middleware
+const corsOptions = {
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  credentials: true,
+  optionSuccessStatus: 200,
+}
+app.use(cors(corsOptions));
+
+
+
 app.use(cors());
 app.use(express.json());
 
@@ -37,20 +48,28 @@ async function run() {
 
   //  Save a user data in db
 
-  app.put('/user', async (req, res) =>{
-    const user = req.body;
 
-    const options = { upsert: true};
-    const query = {email: user?.email};
-    const updateDoc = {
-      $set : {
-        ...user,
-        timestamp : Date.now(),
-      },
-    }
-    const result = await usersCollection.updateOne(query, updateDoc, options);
+  app.post('/users', async (req, res) =>{
+    const user = req.body;
+    const result = await usersCollection.insertOne(user);
     res.send(result);
   })
+
+  // app.put('/user', async (req, res) =>{
+  //   const user = req.body;
+
+  //   const options = { upsert: true};
+  //   const query = {email: user?.email};
+  //   const updateDoc = {
+  //     $set : {
+  //       ...user,
+  //       timestamp : Date.now()
+  //     },
+  //   }
+  //   const result = await usersCollection.updateOne(query, updateDoc, options);
+  //   res.send(result);
+  //   console.log(result);
+  // })
 
 
 
