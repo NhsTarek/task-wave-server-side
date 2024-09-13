@@ -79,6 +79,12 @@ async function run() {
   // })
 
 
+  // Get all users data in db
+  app.get('/users', async (req, res) =>{
+    const result = await usersCollection.find().toArray();
+    res.send(result);
+  })
+
 
 
    // Get all tasks from db
