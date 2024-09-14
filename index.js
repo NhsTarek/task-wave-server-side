@@ -49,7 +49,7 @@ async function run() {
   //  Save a user data in db
 
 
-  app.post('/users', async (req, res) =>{
+  app.post('/user', async (req, res) =>{
     const user = req.body;
     // Checking if a user already existed
     const query = {email : user?.email};
@@ -61,6 +61,21 @@ async function run() {
     const result = await usersCollection.insertOne(user);
     res.send(result);
   })
+
+
+// get a user info with email
+app.get('/user/:email', async (req, res) =>{
+  const email = req.params.email;
+  const result = await usersCollection.findOne({email});
+  res.send(result);
+
+})
+
+
+
+
+
+
 
   // app.put('/user', async (req, res) =>{
   //   const user = req.body;
@@ -84,6 +99,15 @@ async function run() {
     const result = await usersCollection.find().toArray();
     res.send(result);
   })
+
+
+    //  Delete a user
+    app.delete('/user/:id', async (req, res) =>{
+      const id = req.params.id;
+      const query = { _id : new ObjectId(id)};
+      const result = await usersCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
