@@ -43,6 +43,9 @@ async function run() {
     await client.connect();
 
 
+    // Verify admin middleware
+
+
 
 
 
@@ -108,6 +111,22 @@ app.get('/user/:email', async (req, res) =>{
       const result = await usersCollection.deleteOne(query);
       res.send(result);
     })
+
+    // Update user role by ID
+app.put('/user/role/:id', async (req, res) => {
+  const id = req.params.id;
+  const { role } = req.body;
+
+  const query = { _id: new ObjectId(id) };
+  const updateDoc = {
+      $set: {
+          role: role,
+      },
+  };
+
+  const result = await usersCollection.updateOne(query, updateDoc);
+  res.send(result);
+});
 
 
 
