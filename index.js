@@ -2,6 +2,7 @@
  const app = express();
  const cors = require('cors');
  require('dotenv').config();
+ const jwt = require('jsonwebtoken');
  const port = process.env.PORT || 5000;
 
 
@@ -43,7 +44,24 @@ async function run() {
     await client.connect();
 
 
+    // JWT related api
+    app.post('/jwt', async (req, res) =>{
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn : '365d'});
+      res.send({token})
+    })
+
+
     // Verify admin middleware
+    const verifyAdmin = async (req, res, next) =>{
+      const user = req.user;
+      const query = {email : user?.email};
+      const result = await usersCollection.findOne(query);
+      if(!result || result?.role === 'admin') return res.status(401).send({message : 'forbidden access'})
+
+
+        next()
+    }
 
 
 
